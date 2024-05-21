@@ -44,7 +44,6 @@ psql
 ####  Create the database and user:
 ```bash
 sql
-Copier le code
 CREATE DATABASE clientdb;
 CREATE USER clientuser WITH ENCRYPTED PASSWORD 'clientpassword';
 GRANT ALL PRIVILEGES ON DATABASE clientdb TO clientuser;
