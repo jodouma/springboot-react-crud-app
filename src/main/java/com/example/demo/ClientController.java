@@ -1,6 +1,7 @@
 package com.example.demo;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,7 +14,7 @@ public class ClientController {
     private ClientRepository clientRepository;
 
     @GetMapping
-    public List<Client> getAllClients() {
+    public List<Client> getClients() {
         return clientRepository.findAll();
     }
 
@@ -23,15 +24,18 @@ public class ClientController {
     }
 
     @PutMapping("/{id}")
-    public Client updateClient(@PathVariable Long id, @RequestBody Client clientDetails) {
+    public ResponseEntity<Client> updateClient(@PathVariable Long id, @RequestBody Client clientDetails) {
         Client client = clientRepository.findById(id).orElseThrow();
         client.setName(clientDetails.getName());
         client.setEmail(clientDetails.getEmail());
-        return clientRepository.save(client);
+        final Client updatedClient = clientRepository.save(client);
+        return ResponseEntity.ok(updatedClient);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteClient(@PathVariable Long id) {
-        clientRepository.deleteById(id);
+    public ResponseEntity<Void> deleteClient(@PathVariable Long id) {
+        Client client = clientRepository.findById(id).orElseThrow();
+        clientRepository.delete(client);
+        return ResponseEntity.noContent().build();
     }
 }
